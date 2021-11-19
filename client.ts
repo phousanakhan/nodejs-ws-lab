@@ -164,68 +164,63 @@ class GameScene extends Phaser.Scene {
         continue;
       }
 
-      if (this.players[this.id]) {
-        const player = this.players[this.id];
-        let moving = false;
+      // if (this.players[this.id]) {
+      //   const player = this.players[this.id];
+      let moving = false;
 
 
-        if (!moving) {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocity(0);
-          player.anims.stop();
-        } else if (this.wsClient) {
-          this.wsClient.send(JSON.stringify({
-            id: this.id,
-            x: player.x,
-            y: player.y,
-            frame: player.frame.name
-          }));
-        }
-
-        if (this.leftKey && this.leftKey.isDown) {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocityX(-this.VELOCITY);
-          player.play("left", true);
-          moving = true;
-        } else if (this.rightKey && this.rightKey.isDown) {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocityX(this.VELOCITY);
-          player.play("right", true);
-          moving = true;
-        } else {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocityX(0);
-        }
-        if (this.upKey && this.upKey.isDown) {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocityY(-this.VELOCITY);
-          player.play("up", true);
-          moving = true;
-        } else if (this.downKey && this.downKey.isDown) {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocityY(this.VELOCITY);
-          player.play("down", true);
-          moving = true;
-        } else {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocityY(0);
-        }
-        if (!moving) {
-          (player.body as Phaser.Physics.Arcade.Body).setVelocity(0);
-          player.anims.stop();
-        }
-        player.update();
+      if (this.leftKey && this.leftKey.isDown) {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityX(-this.VELOCITY);
+        player.play("left", true);
+        moving = true;
+      } else if (this.rightKey && this.rightKey.isDown) {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityX(this.VELOCITY);
+        player.play("right", true);
+        moving = true;
+      } else {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityX(0);
       }
+      if (this.upKey && this.upKey.isDown) {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityY(-this.VELOCITY);
+        player.play("up", true);
+        moving = true;
+      } else if (this.downKey && this.downKey.isDown) {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityY(this.VELOCITY);
+        player.play("down", true);
+        moving = true;
+      } else {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocityY(0);
+      }
+      if (!moving) {
+        (player.body as Phaser.Physics.Arcade.Body).setVelocity(0);
+        player.anims.stop();
+      } else if (this.wsClient) {
+        this.wsClient.send(JSON.stringify({
+          id: this.id,
+          x: player.x,
+          y: player.y,
+          frame: player.frame.name
+        }));
+      }
+      player.update();
     }
   }
+}
 
 
-  // Phaser configuration variables
-  const config: GameConfig = {
-    type: Phaser.AUTO,
-    width: 800,
-    height: 500,
-    scene: [GameScene],
-    input: { keyboard: true },
-    physics: {
-      default: "arcade",
-      arcade: { debug: DEBUG }
-    },
-    render: { pixelArt: true, antialias: false }
-  }
+// Phaser configuration variables
+const config: GameConfig = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 500,
+  scene: [GameScene],
+  input: { keyboard: true },
+  physics: {
+    default: "arcade",
+    arcade: { debug: DEBUG }
+  },
+  render: { pixelArt: true, antialias: false }
+}
 
 class LabDemoGame extends Phaser.Game {
   constructor(config: GameConfig) {
